@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="Description" content="Scales written by Corey Trager in HTML and Javascript">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Scales</title>
+
+    <style>
+        body {
+            font-family: verdana, arial;
+            font-size: 20px;
+            margin: 20px;
+        }
+
+        button {
+            width: 60px;
+            font-family: verdana, arial;
+            font-size: 20px;
+        }
+
+        #gain_input {
+            font-size: 20px;
+        }
+
+        #my_title {
+            font-size: 18px;
+            letter-spacing: 3px;
+        }
+
+        .not_pressed {
+            color: black;
+            font-weight: normal;
+        }
+
+        .pressed {
+            color: red;
+            font-weight: bold
+        }
+
+        #a440 {
+            background: lightgreen;
+        }
+
+        .footer {
+            font-size: 12px;
+        }
+    </style>
+    <script>
+        "use strict"
+
+        var AudioContext = window.AudioContext || window.webkitAudioContext; // cross browser    
+        var audio_context
+        var oscillator
+        var gain
+        var gain_factor = .5
+        var gain_input
+        var prev_frequency
+        var prev_button
+        var note_array
+        var note_index
+        var interval
+        var name_to_freq_hash = {
+            "a1": 110.00,
+            "b1": 123.47,
+            "c1": 130.81,
+            "d1": 146.83,
+            "e1": 164.81,
+            "f1": 174.61,
+            "g1": 196.00
+        }
+
+        function on_load() {
+            gain_input = document.getElementById("gain_input")
+        }
+
+        function change_gain() {
+            gain_factor = gain_input.value / 100.0
+            gain.gain.value = gain_factor
+        }
+
+        function start(frequency, button) {
+
+            stop()
+
+            // can't do this in onload because browser wants an explicit user gesture
+            if (audio_context == null) {
+                audio_context = new AudioContext()
+
+                // There's a "node graph"  oscillator->gain->destination
+                oscillator = audio_context.createOscillator()
+                gain = audio_context.createGain()
+                gain.gain.value = gain_factor
+                oscillator.connect(gain)
+                oscillator.start()
+            }
+
+
+            var notes = document.getElementById("notes").value;
+            notes = notes.replace(/ /g, '')
+            note_array = notes.split(",")
+            note_index = 0
+            interval = setInterval(next_note, document.getElementById("duration").value)
+
+        }
+
+        function next_note() {
+            //stop()
+
+            var frequency = name_to_freq_hash[note_array[note_index]]
+            console.log(frequency)
+            oscillator.frequency.value = frequency
+
+            // connect and disconnect is on and off
+            gain.connect(audio_context.destination)
+
+
+            if (note_index < (note_array.length - 1)) {
+                note_index++
+
+            }
+            else {
+                note_index = 0
+            }
+
+        }
+
+        function stop() {
+            try {
+                clearInterval(interval)
+                gain.disconnect()
+                //prev_button.className = "not_pressed"
+            } catch (err) {
+                // swallow
+            }
+        }
+
+
+    </script>
+</head>
+
+<body>
+
+    <input id="notes" type="text" value="a1,b1,c1,c1,d1,e1,f1,f1,g1"></input>
+    <br>
+    <input id="duration" type="text" value="2000"></input>
+    <br>
+
+    <button onclick="start()" style="background-color: green;">Start</button>
+
+    <button onclick="stop()" style="background-color: red;">Stop</button>
+
+    <br>
+    <br>
+    Volume:
+    <br>
+    <input id="gain_input" type="number" onchange="change_gain()" min="1" max="100" value="50"></input>
+
+    <br>
+    <br>
+    <div class="footer">by <a href="https://ctrager.github.io">Corey Trager</a> - <a
+            href="https://github.com/ctrager/drone_tones">https://github.com/ctrager/drone_tones</a></div>
+
+</body>
+
+</html>
