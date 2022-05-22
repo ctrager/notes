@@ -117,18 +117,15 @@
         function play_or_stop() {
             if (my_play_button.innerText == "Start") {
                 play()
-                // toggle text
-                my_play_button.innerText = "Stop"
-                my_play_button.style.backgroundColor = "red"
             } else {
                 stop_playing()
-                // toggle text
-                my_play_button.innerText = "Start"
-                my_play_button.style.backgroundColor = "lightgreen"
             }
         }
 
         function play(frequency, button) {
+
+            my_play_button.innerText = "Stop"
+            my_play_button.style.backgroundColor = "red"
 
             // can't do this in onload because browser wants an explicit user gesture
             if (audio_context == null) {
@@ -193,6 +190,9 @@
             } catch (err) {
                 // swallow
             }
+            my_play_button.innerText = "Start"
+            my_play_button.style.backgroundColor = "lightgreen"
+
         }
 
         function back() {
@@ -253,6 +253,8 @@ c4,e4,g4,bb4,c5,bb4,g4,e4,f4,f4
             var index = el.selectedIndex
             var snippet_key = el.options[index].value
             notes_textarea.value = snippets[snippet_key]
+            stop_playing()
+
         }
 
     </script>
@@ -260,12 +262,16 @@ c4,e4,g4,bb4,c5,bb4,g4,e4,f4,f4
 
 <body onload="on_load()">
 
+    Select excercise:
+    <br>
     <select onclick="select_excercise()" id="excercise" size="3">
         <option value="kreutzer">Kreutzer 2</option>
         <option value="arpeggios">Arpeggios</option>
         <option value="scale">C scale</option>
     </select><br><br>
 
+    or type notes:
+    <br>
     <textarea rows="10" cols="30" id="notes_textarea">
 
     </textarea>
