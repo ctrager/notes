@@ -23,6 +23,10 @@
             font-size: 20px;
         }
 
+        #duration {
+            font-size: 20px;
+        }
+
         #my_title {
             font-size: 18px;
             letter-spacing: 3px;
@@ -36,10 +40,6 @@
         .pressed {
             color: red;
             font-weight: bold
-        }
-
-        #a440 {
-            background: lightgreen;
         }
 
         .footer {
@@ -131,7 +131,14 @@
 
             stop()
             console.log(note_array[note_index])
+
             var frequency = name_to_freq_hash[note_array[note_index]]
+
+            if (typeof frequency == 'undefined') {
+                alert("Oops! " + note_array[note_index])
+                frequency = 800
+            }
+
             oscillator.frequency.value = frequency
 
             // connect and disconnect is on and off
@@ -161,6 +168,13 @@
             }
         }
 
+        function back() {
+            note_index -= document.getElementById("number_back").value
+            if (note_index < 0) {
+                note_index = 0
+            }
+
+        }
 
     </script>
 </head>
@@ -170,7 +184,7 @@
     <!--
     -->
 
-    <textarea rows="10" cols="60" id="notes">
+    <textarea rows="20" cols="60" id="notes">
 
 c4,e4,g4,f4,e4,f4,d4,e4,
 c4,e4,g4,f4,e4,f4,d4,e4,
@@ -180,7 +194,7 @@ c4,d4,e4,d4,c4,d4,b3,c4,
         
 a3,c4,e4,d4,c4,d4,b3,c4,
 a3,c4,e4,d4,c4,d4,b3,c4,
-    -
+    
 a3,c4,e4,d4,c4,d4,b3,c4,
 a3,b3,c4,b3,a3,b3,g3,a3,
        
@@ -202,8 +216,13 @@ c4,c4
 
 
     </textarea>
+
     <br>
-    <input id="duration" type="text" value="500"></input>
+    <br>
+    Duration in milliseconds:
+    <br>
+    <input id="duration" type="number" min="100" max="5000" type="text" value="500"></input>
+    <br>
     <br>
 
     <button onclick="start()" style="background-color: green;">Start</button>
@@ -211,13 +230,18 @@ c4,c4
     <button onclick="stop()" style="background-color: red;">Stop</button>
 
     <br>
+    <button onclick="back()">Back</button>
+    Go back this many notes:
+    <input id="number_back" type="number" min="1" max="20" type="text" value="6"></input>
+
+    <br>
     <br>
     Volume:
     <br>
     <input id="gain_input" type="number" onchange="change_gain()" min="1" max="100" value="50"></input>
+    <br>
+    <br>
 
-    <br>
-    <br>
     <div class="footer">by <a href="https://ctrager.github.io">Corey Trager</a> - <a
             href="https://github.com/ctrager/drone_tones">https://github.com/ctrager/drone_tones</a></div>
 
