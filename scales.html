@@ -59,16 +59,37 @@
         var prev_button
         var note_array
         var note_index
-        var interval
+        var timeout = null
         var name_to_freq_hash = {
-            "a1": 110.00,
-            "b1": 123.47,
-            "c1": 130.81,
-            "d1": 146.83,
-            "e1": 164.81,
-            "f1": 174.61,
-            "g1": 196.00
+            "c3": 130.81,
+            "c#3": 138.59,
+            "d3": 146.83,
+            "d#3": 155.56,
+            "e3": 164.81,
+            "f3": 174.61,
+            "f#3": 185.00,
+            "g3": 196.00,
+            "g#3": 207.65,
+            "a3": 220.00,
+            "a#3": 233.08,
+            "b3": 246.94,
+
+            "c4": 261.63,
+            "c#4": 277.18,
+            "d4": 293.66,
+            "d#4": 311.13,
+            "e4": 329.63,
+            "f4": 349.23,
+            "f#4": 369.23,
+            "g4": 392.00,
+            "g#4": 415.30,
+            "a4": 440,
+            "a#4": 466.16,
+            "b4": 493.88,
+
+            "c5": 523.25
         }
+
 
         function on_load() {
             gain_input = document.getElementById("gain_input")
@@ -97,18 +118,20 @@
 
 
             var notes = document.getElementById("notes").value;
-            notes = notes.replace(/ /g, '')
+            notes = notes.replace(/ /g, ""); // remove spaces
+            notes = notes.replace(/\n/g, "");
             note_array = notes.split(",")
             note_index = 0
-            interval = setInterval(next_note, document.getElementById("duration").value)
+
+            next_note()
 
         }
 
         function next_note() {
-            //stop()
 
+            stop()
+            console.log(note_array[note_index])
             var frequency = name_to_freq_hash[note_array[note_index]]
-            console.log(frequency)
             oscillator.frequency.value = frequency
 
             // connect and disconnect is on and off
@@ -123,11 +146,14 @@
                 note_index = 0
             }
 
+            timeout = setTimeout(next_note, document.getElementById("duration").value)
+
+
         }
 
         function stop() {
             try {
-                clearInterval(interval)
+                clearTimeout(timeout)
                 gain.disconnect()
                 //prev_button.className = "not_pressed"
             } catch (err) {
@@ -141,9 +167,23 @@
 
 <body>
 
-    <input id="notes" type="text" value="a1,b1,c1,c1,d1,e1,f1,f1,g1"></input>
+    <textarea rows="8" cols="80" id="notes">
+c4,e4,g4,f4,e4,f4,d4,e4,
+c4,e4,g4,f4,e4,f4,d4,e4,
+
+c4,e4,g4,f4,e4,f4,d4,e4,
+c4,d4,e4,d4,c4,d4,b3,c4,
+
+a3,c4,e4,d4,c4,d4,b3,c4,
+a3,c4,e4,d4,c4,d4,b3,c4,
+
+a3,c4,e4,d4,c4,d4,b3,c4,
+a3,b3,c4,b3,a3,b3,g3,a3,
+
+
+    </textarea>
     <br>
-    <input id="duration" type="text" value="2000"></input>
+    <input id="duration" type="text" value="500"></input>
     <br>
 
     <button onclick="start()" style="background-color: green;">Start</button>
