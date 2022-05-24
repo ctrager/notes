@@ -146,7 +146,7 @@ c4,e4,g4,bb4,c5,bb4,g4,e4,f4,f4
         function on_load() {
             gain_input = document.getElementById("gain_input")
             notes_textarea = document.getElementById("notes_textarea");
-            notes_textarea.value = snippets["kreutzer"]
+            notes_textarea.innerHTML = snippets["kreutzer"]
         }
 
         function change_gain() {
@@ -180,7 +180,7 @@ c4,e4,g4,bb4,c5,bb4,g4,e4,f4,f4
             }
 
 
-            var notes = notes_textarea.value
+            var notes = notes_textarea.innerHTML
             notes = notes.replace(/ /g, ""); // remove spaces
             notes = notes.replace(/\n/g, ""); // remove line breaks
             note_array = notes.split(",")
@@ -254,7 +254,7 @@ c4,e4,g4,bb4,c5,bb4,g4,e4,f4,f4
             var el = document.getElementById("excercise")
             var index = el.selectedIndex
             var snippet_key = el.options[index].value
-            notes_textarea.value = snippets[snippet_key]
+            notes.textarea.innerHTML = snippets[snippet_key]
 
         }
 
