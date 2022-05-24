@@ -19,8 +19,12 @@
             white-space: nowrap;
         }
 
-        #gain_input {
+        input {
             font-size: 20px;
+        }
+
+        select {
+            font-size: 16px;
         }
 
         #duration {
@@ -32,35 +36,14 @@
             letter-spacing: 3px;
         }
 
-        .not_pressed {
-            color: black;
-            font-weight: normal;
-        }
-
-        .pressed {
-            color: red;
-            font-weight: bold
-        }
-
         .footer {
             font-size: 12px;
         }
     </style>
+
     <script>
         "use strict"
 
-        var AudioContext = window.AudioContext || window.webkitAudioContext; // cross browser    
-        var audio_context
-        var oscillator
-        var gain
-        var gain_factor = .5
-        var gain_input
-        var prev_frequency
-        var prev_button
-        var note_array
-        var note_index
-        var timeout = null
-        var notes_textarea
         var name_to_freq_hash = {
 
             "c3": 130.81,
@@ -103,6 +86,63 @@
         }
 
 
+        var kreutzer_notes = `c4,e4,g4,f4,e4,f4,d4,e4,
+c4,e4,g4,f4,e4,f4,d4,e4,
+        
+c4,e4,g4,f4,e4,f4,d4,e4,
+c4,d4,e4,d4,c4,d4,b3,c4,
+        
+a3,c4,e4,d4,c4,d4,b3,c4,
+a3,c4,e4,d4,c4,d4,b3,c4,
+    
+a3,c4,e4,d4,c4,d4,b3,c4,
+a3,b3,c4,b3,a3,b3,g3,a3,
+       
+f3,a3,c4,a#3,a3,a#3,g3,a3,
+f3,a3,d4,c4,b3,c4,a3,b3,
+
+g3,b3,d4,c4,b3,c4,a3,b3,
+g3,b3,e4,d4,c4,d4,b3,c4,
+
+a3,c4,e4,d4,c4,d4,b3,c4,
+a3,c4,f4,e4,d4,e4,c4,d4,
+
+b3,d4,f4,e4,d4,e4,c4,d4,
+b3,d4,g4,f4,e4,f4,d4,e4,
+
+c4,c4
+`
+        var arpeggios_notes = `c4,eb4,g4,c5,g4,eb4,
+c4,e4,g4,c5,g4,e4,
+c4,e4,a4,c5,a4,e4,
+c4,f4,a4,c5,a4,f4,
+c4,f4,ab4,c5,ab4,f4,
+c4,eb4,f#4,a4,c5,a4,f#4,eb4,
+c4,e4,g4,bb4,c5,bb4,g4,e4,f4,f4
+`
+        var scale_notes = 'c3,d3,e3,f3,g3,a3,b3,c4,b3,a3,g3,f3,e3,d3,c3'
+
+        var snippets = {
+
+            "kreutzer": kreutzer_notes,
+            "arpeggios": arpeggios_notes,
+            "scale": scale_notes
+
+        }
+
+        var AudioContext = window.AudioContext || window.webkitAudioContext; // cross browser    
+        var audio_context
+        var oscillator
+        var gain
+        var gain_factor = .5
+        var gain_input
+        var prev_frequency
+        var prev_button
+        var note_array
+        var note_index
+        var timeout = null
+        var notes_textarea
+
         function on_load() {
             gain_input = document.getElementById("gain_input")
             notes_textarea = document.getElementById("notes_textarea");
@@ -142,21 +182,22 @@
 
             var notes = notes_textarea.value
             notes = notes.replace(/ /g, ""); // remove spaces
-            notes = notes.replace(/\n/g, "");
+            notes = notes.replace(/\n/g, ""); // remove line breaks
             note_array = notes.split(",")
             note_index = 0
 
+            // start playing
             next_note()
 
         }
 
         function next_note() {
 
-
             console.log(note_array[note_index])
 
             var frequency = name_to_freq_hash[note_array[note_index]]
 
+            // if we can't find the frequency
             if (typeof frequency == 'undefined') {
                 play_or_stop();
                 alert("Oops! " + note_array[note_index])
@@ -168,17 +209,22 @@
             // connect and disconnect is on and off
             gain.connect(audio_context.destination)
 
-
             if (note_index < (note_array.length - 1)) {
                 note_index++
-
             }
             else {
+                // loop back to start
                 note_index = 0
             }
 
-            timeout = setTimeout(next_note, document.getElementById("duration").value)
+            var duration = document.getElementById("duration").value
 
+            // when editing duration, without this, it can sound ugly
+            if (duration < 200) {
+                duration = 200
+            }
+
+            timeout = setTimeout(next_note, duration)
 
         }
 
@@ -186,7 +232,6 @@
             try {
                 clearTimeout(timeout)
                 gain.disconnect()
-                //prev_button.className = "not_pressed"
             } catch (err) {
                 // swallow
             }
@@ -200,60 +245,16 @@
             if (note_index < 0) {
                 note_index = 0
             }
-
-        }
-
-        var kreutzer_notes = `c4,e4,g4,f4,e4,f4,d4,e4,
-c4,e4,g4,f4,e4,f4,d4,e4,
-        
-c4,e4,g4,f4,e4,f4,d4,e4,
-c4,d4,e4,d4,c4,d4,b3,c4,
-        
-a3,c4,e4,d4,c4,d4,b3,c4,
-a3,c4,e4,d4,c4,d4,b3,c4,
-    
-a3,c4,e4,d4,c4,d4,b3,c4,
-a3,b3,c4,b3,a3,b3,g3,a3,
-       
-f3,a3,c4,a#3,a3,a#3,g3,a3,
-f3,a3,d4,c4,b3,c4,a3,b3,
-
-g3,b3,d4,c4,b3,c4,a3,b3,
-g3,b3,e4,d4,c4,d4,b3,c4,
-
-a3,c4,e4,d4,c4,d4,b3,c4,
-a3,c4,f4,e4,d4,e4,c4,d4,
-
-b3,d4,f4,e4,d4,e4,c4,d4,
-b3,d4,g4,f4,e4,f4,d4,e4,
-
-c4,c4
-`
-        var arpeggios_notes = `c4,eb4,g4,c5,g4,eb4,
-c4,e4,g4,c5,g4,e4,
-c4,e4,a4,c5,a4,e4,
-c4,f4,a4,c5,a4,f4,
-c4,f4,ab4,c5,ab4,f4,
-c4,eb4,f#4,a4,c5,a4,f#4,eb4,
-c4,e4,g4,bb4,c5,bb4,g4,e4,f4,f4
-`
-        var scale_notes = 'c3,d3,e3,f3,g3,a3,b3,c4,b3,a3,g3,f3,e3,d3,c3'
-
-
-        var snippets = {
-
-            "kreutzer": kreutzer_notes,
-            "arpeggios": arpeggios_notes,
-            "scale": scale_notes
-
         }
 
         function select_excercise() {
+
+            stop_playing()
+
             var el = document.getElementById("excercise")
             var index = el.selectedIndex
             var snippet_key = el.options[index].value
             notes_textarea.value = snippets[snippet_key]
-            stop_playing()
 
         }
 
@@ -262,6 +263,10 @@ c4,e4,g4,bb4,c5,bb4,g4,e4,f4,f4
 
 <body onload="on_load()">
 
+    <button id="my_play_button" onclick="play_or_stop()" style="background-color: lightgreen;">Start</button>
+
+    <br>
+    <br>
     Select excercise:
     <br>
     <select onclick="select_excercise()" id="excercise" size="3">
@@ -278,23 +283,17 @@ c4,e4,g4,bb4,c5,bb4,g4,e4,f4,f4
 
     <br>
     <br>
-    Duration in milliseconds:
-    <br>
-    <input id="duration" type="number" min="100" max="5000" type="text" value="500"></input>
-    <br>
-    <br>
-
-    <button id="my_play_button" onclick="play_or_stop()" style="background-color: lightgreen;">Start</button>
+    Duration in milliseconds:&nbsp;
+    <input id="duration" type="number" min="200" max="5000" type="text" value="500"></input>
 
     <br>
     <br>
     <button onclick="back()">Go Back</button>
-    <input id="number_back" type="number" min="1" max="20" type="text" value="12"></input>
+    <input id="number_back" type="number" min="1" max="24" type="text" value="12"></input>
 
     <br>
     <br>
-    Volume:
-    <br>
+    Volume:&nbsp;
     <input id="gain_input" type="number" onchange="change_gain()" min="1" max="100" value="50"></input>
     <br>
     <br>
