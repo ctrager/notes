@@ -82,7 +82,26 @@
             "bb4": 466.16,
             "b4": 493.88,
 
-            "c5": 523.25
+            "c5": 523.25,
+            "c#5": 554.37,
+            "db5": 554.37,
+            "d5": 587.33,
+            "d#5": 622.25,
+            "eb5": 622.25,
+            "e5": 659.25,
+            "f5": 698.46,
+            "f#5": 739.99,
+            "gb5": 739.99,
+            "g5": 783.99,
+            "g#5": 830.61,
+            "ab5": 830.61,
+            "a5": 880.00,
+            "a#5": 932.33,
+            "bb5": 932.33,
+            "b5": 987.77,
+
+            "c6": 1046.50
+
         }
 
 
@@ -180,15 +199,20 @@ c4,e4,g4,bb4,c5,bb4,g4,e4,f4,f4
             }
 
 
-            var notes = notes_textarea.value
-            notes = notes.replace(/ /g, ""); // remove spaces
-            notes = notes.replace(/\n/g, ""); // remove line breaks
-            note_array = notes.split(",")
+            var note_text = notes_textarea.value
+            note_array = note_text_to_note_array(note_text)
             note_index = 0
 
             // start playing
             next_note()
 
+        }
+
+        function note_text_to_note_array(text) {
+            var note_text = text.replace(/ /g, ""); // remove spaces
+            note_text = note_text.replace(/\n/g, ""); // remove line breaks
+            var array = note_text.split(",")
+            return array
         }
 
         function next_note() {
@@ -258,6 +282,19 @@ c4,e4,g4,bb4,c5,bb4,g4,e4,f4,f4
 
         }
 
+        function change_octave(delta) {
+            var array = note_array
+            for (var i = 0; i < array.length; i++) {
+                var note = array[i]
+                var prev_octave = parseInt(note.slice(-1), 10)
+                var new_octave = prev_octave += delta
+                note = note.replace(/.$/, new_octave)
+                console.log(note)
+                array[i] = note
+            }
+            note_array = array
+        }
+
     </script>
 </head>
 
@@ -295,8 +332,18 @@ c4,e4,g4,bb4,c5,bb4,g4,e4,f4,f4
     <br>
     Volume:&nbsp;
     <input id="gain_input" type="number" onchange="change_gain()" min="1" max="100" value="50"></input>
+
+
     <br>
     <br>
+    <button onclick="back()">Go Back</button>
+    <input id="number_back" type="number" min="1" max="24" type="text" value="12"></input>
+
+    <br>
+    <br>
+
+    <button onclick="change_octave(1)">Up An Octave</button>&nbsp;
+    <button onclick="change_octave(-1)">Down An Octave</button>&nbsp;
 
     <div class="footer">by <a href="https://ctrager.github.io">Corey Trager</a> - <a
             href="https://github.com/ctrager/notes">https://github.com/ctrager/notes</a></div>
