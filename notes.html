@@ -148,20 +148,30 @@ b4,d5,g5,f5,e5,f5,d5,e5,
 
 c5,c5
 `
-        var arpeggios_notes = `c4,eb4,g4,c5,g4,eb4,
+        var c_arpeggios_notes = `c4,eb4,g4,c5,g4,eb4,
 c4,e4,g4,c5,g4,e4,
 c4,e4,a4,c5,a4,e4,
 c4,f4,a4,c5,a4,f4,
 c4,f4,ab4,c5,ab4,f4,
 c4,eb4,f#4,a4,c5,a4,f#4,eb4,
-c4,e4,g4,bb4,c5,bb4,g4,e4,f4,f4
-`
+c4,e4,g4,bb4,c5,bb4,g4,e4,f4,f4`
+
+        var g_arpeggios_notes = `g5, bb5, d6, g6, d6, bb5,
+g5, b5, d6, g6, d6, b5,
+g5, b5, e6, g6, e6, b5,
+g5, c6, e6, g6, e6, c6,
+
+g5, c6, eb6, g6, eb6, c6,
+g5, bb5, db6, e6, g6, e6, db6, bb5,
+g5, b5, d6, f6, g6, f6, d6, b5, c6
+        `
         var scale_notes = 'c3,d3,e3,f3,g3,a3,b3,c4,b3,a3,g3,f3,e3,d3,c3'
 
         var snippets = {
 
             "kreutzer": kreutzer_notes,
-            "arpeggios": arpeggios_notes,
+            "c_arpeggios": c_arpeggios_notes,
+            "g_arpeggios": g_arpeggios_notes,
             "scale": scale_notes
 
         }
@@ -331,7 +341,8 @@ c4,e4,g4,bb4,c5,bb4,g4,e4,f4,f4
     <br>
     <select onchange="select_exercise()" id="excercise" size="3">
         <option value="kreutzer">Kreutzer 2</option>
-        <option value="arpeggios">Arpeggios</option>
+        <option value="c_arpeggios">C Arpeggios</option>
+        <option value="g_arpeggios">G Arpeggios</option>
         <option value="scale">C scale</option>
     </select><br><br>
 
