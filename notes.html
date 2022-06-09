@@ -213,6 +213,8 @@
 
             console.log(note_array[note_index])
 
+            document.getElementById("which_note").value = note_index + 1
+
             var frequency = name_to_freq_hash[note_array[note_index]]
 
             // if we can't find the frequency
@@ -317,6 +319,8 @@
 
     <br>
     <br>
+    Note #: <input id="which_note" type="number" type="text" min="0" max="999" value="0"></input>
+
     <button onclick="back()">Go Back</button>
     <input id="number_back" type="number" min="1" max="24" type="text" value="12"></input>
 
@@ -341,7 +345,7 @@
 <script>
 
     var snippets = {
-        "Kreutzer First 8 Measures": `c5,e5,g5,f5,e5,f5,d5,e5,
+        "Kreutzer measures 1-to-8": `c5,e5,g5,f5,e5,f5,d5,e5,
 c5,e5,g5,f5,e5,f5,d5,e5,
         
 c5,e5,g5,f5,e5,f5,d5,e5,
@@ -366,6 +370,19 @@ b4,d5,f5,e5,d5,e5,c5,d5,
 b4,d5,g5,f5,e5,f5,d5,e5,
 
 c5,c5`,
+
+        "Kreutzer measure 10": `g5,g4,a4,b4,c5,d5,e5,c5,
+f5,f4,g4,a4,b4,c5,d5,b4,e5`,
+
+
+        "Kreutzer measure 19": `c5,g5,f#5,g5,e5,g5,d5,g5,
+c5,e5,d5,e5,c5,e5,b4,e5,
+a4,a5,g#5,a5,f5,a5,e5,a5,
+d5,f5,e5,f5,d5,f5,c5,f5,
+b4,b5,a#5,b5,g5,b5,f5,b5,
+e5,g5,f#5,g5,e5,g5,d5,g5,c5
+`,
+
 
         "C Arpeggios": `c4,eb4,g4,c5,g4,eb4,
 c4,e4,g4,c5,g4,e4,
