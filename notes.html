@@ -315,7 +315,7 @@
     <br>
     <br>
     Duration in milliseconds:&nbsp;
-    <input id="duration" type="number" min="200" max="5000" type="text" value="500"></input>
+    <input id="duration" type="number" min="200" max="5000" type="text" value="600"></input>
 
     <br>
     <br>
@@ -345,7 +345,7 @@
 <script>
 
     var snippets = {
-        "Kreutzer measures 1-to-8": `c5,e5,g5,f5,e5,f5,d5,e5,
+        "Kreutzer measures 1-8": `c5,e5,g5,f5,e5,f5,d5,e5,
 c5,e5,g5,f5,e5,f5,d5,e5,
         
 c5,e5,g5,f5,e5,f5,d5,e5,
@@ -367,30 +367,62 @@ a4,c5,e5,d5,c5,d5,b4,c5,
 a4,c5,f5,e5,d5,e5,c5,d5,
 
 b4,d5,f5,e5,d5,e5,c5,d5,
-b4,d5,g5,f5,e5,f5,d5,e5,
+b4,d5,g5,f5,e5,f5,d5,e5`,
 
-c5,c5`,
+        "Kreutzer measure 4-5": `a4,c5,e5,d5,c5,d5,b4,c5,
+a4,b4,c5,b4,a4,b4,g4,a4,
+f4,a4,c5,a#4,a4,a#4,g4,a4,
+f4,a4,d5,c5,b4,c5,a4,b4,`,
 
-        "Kreutzer measure 10": `g5,g4,a4,b4,c5,d5,e5,c5,
-f5,f4,g4,a4,b4,c5,d5,b4,e5`,
+
+        "Kreutzer measure 9-12": `c5,e5,g5,f5,e5,f5,g5,e5,
+a5,a4,b4,c5,d5,e5,f5,d5,
+
+g5, g4, a4, b4, c5, d5, e5, c5,
+f5,f4,g4,a4,b4,c5,d5,b4,
 
 
-        "Kreutzer measure 19": `c5,g5,f#5,g5,e5,g5,d5,g5,
-c5,e5,d5,e5,c5,e5,b4,e5,
-a4,a5,g#5,a5,f5,a5,e5,a5,
-d5,f5,e5,f5,d5,f5,c5,f5,
-b4,b5,a#5,b5,g5,b5,f5,b5,
-e5,g5,f#5,g5,e5,g5,d5,g5,c5
+e5,e4,f4,g4,a4,b4,c5,a4,
+d5,d4,e4,f4,g4,a4,b4,g4,
+
+c5,c4
+`,
+
+        "Kreutzer measure 10": `g5, g4, a4, b4, c5, d5, e5, c5,
+f5, f4, g4, a4, b4, c5, d5, b4, e5,e4`,
+
+
+        "Kreutzer measure 12-16": `c5,c4,d4,e4,f4,a4,b4,c5,
+d5,d4,e4,f4,g4,b4,c5,d5,
+
+e5,e4,f4,g4,a4,c5,d5,e5,
+f5,f4,g4,a4,b4,d5,e5,f5,
+
+g5,g4,a4,b4,c5,e5,f5,g5,
+a5,a4,b4,c5,d5,f5,g5,a5,
+
+b5,b4,c5,d5,e5,g5,a5,b5,
+c6,c5,d5,e5,f5,a5,b5,c6,
+
+d6,d5,e5,f5,g5,g4,g5,f5,
 `,
 
 
-        "C Arpeggios": `c4,eb4,g4,c5,g4,eb4,
-c4,e4,g4,c5,g4,e4,
-c4,e4,a4,c5,a4,e4,
-c4,f4,a4,c5,a4,f4,
-c4,f4,ab4,c5,ab4,f4,
-c4,eb4,f#4,a4,c5,a4,f#4,eb4,
-c4,e4,g4,bb4,c5,bb4,g4,e4,f4,f4`,
+        "Kreutzer measure 19-21": `c5, g5, f#5, g5, e5, g5, d5, g5,
+c5, e5, d5, e5, c5, e5, b4, e5,
+a4, a5, g#5, a5, f5, a5, e5, a5,
+d5, f5, e5, f5, d5, f5, c5, f5,
+b4, b5, a#5, b5, g5, b5, f5, b5,
+e5, g5, f#5, g5, e5, g5, d5, g5`,
+
+
+        "C Arpeggios": `c4, eb4, g4, c5, g4, eb4,
+c4, e4, g4, c5, g4, e4,
+c4, e4, a4, c5, a4, e4,
+c4, f4, a4, c5, a4, f4,
+c4, f4, ab4, c5, ab4, f4,
+c4, eb4, f#4, a4, c5, a4, f#4, eb4,
+    c4, e4, g4, bb4, c5, bb4, g4, e4, f4, f4`,
 
         "G Arpeggios": `g5, bb5, d6, g6, d6, bb5,
 g5, b5, d6, g6, d6, b5,
@@ -401,15 +433,14 @@ g5, c6, eb6, g6, eb6, c6,
 g5, bb5, db6, e6, g6, e6, db6, bb5,
 g5, b5, d6, f6, g6, f6, d6, b5, c6, c6`,
 
-        "F Arpeggios": `f5,ab5,c6,f6,c6,ab5,
-f5,a5,c6,f6,c6,a5,
-f5,a5,d6,f6,d6,a5,
-f5,bb5,d6,f6,d6,bb5,
-f5,bb5,db6,f6,db6,bb5,
+        "F Arpeggios": `f5, ab5, c6, f6, c6, ab5,
+f5, a5, c6, f6, c6, a5,
+f5, a5, d6, f6, d6, a5,
+f5, bb5, d6, f6, d6, bb5,
+f5, bb5, db6, f6, db6, bb5,
 
-f5,ab5,b5,d6,f6,d6,b5,ab5,
-f5,a5,c6,eb6,f6,eb6,c6,a5,bb5
-`
+f5, ab5, b5, d6, f6, d6, b5, ab5,
+f5, a5, c6, eb6, f6, eb6, c6, a5, bb5`
     }
 
 </script>
