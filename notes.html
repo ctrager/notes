@@ -132,6 +132,7 @@
         var gain_input
         var duration_input
         var start_at_input
+        var snippet_title_input
         var current_note_span
         var snippet_select
         var prev_frequency
@@ -140,6 +141,7 @@
         var note_index
         var timeout = null
         var notes_textarea
+        var saved_snippets
 
         function on_load() {
             // get html elements
@@ -147,6 +149,7 @@
             duration_input = document.getElementById("duration_input")
             current_note_span = document.getElementById("current_note_span")
             start_at_input = document.getElementById("start_at_input")
+            snippet_title_input = document.getElementById("snippet_title_input")
             notes_textarea = document.getElementById("notes_textarea");
             snippet_select = document.getElementById("snippet_select")
 
@@ -165,7 +168,47 @@
                 snippet_select.append(option)
             })
 
+
+            // get saved snippets and add them to dropdown also
+            //saved_snippets = JSON.parse(localStorage.getItem('saved_snippets'));
+
+            if (saved_snippets != null) {
+                Object.keys(saved_snippets).forEach(function (key) {
+
+                    // save in memory
+                    snippets[key] = saved_snippets[key]
+
+                    // load snippets dropdown with data
+                    var option = document.createElement('option');
+                    option.value = key
+                    option.innerHTML = key
+                    snippet_select.append(option)
+                })
+            }
+            else {
+                saved_snippets = {}
+            }
+
         }
+
+
+        function save() {
+            // save in object (memory)
+            var key = snippet_title_input.value
+            snippets[key] = notes_textarea.value
+            saved_snippets[key] = notes_textarea.value
+
+            // save in dropdown
+            var option = document.createElement('option');
+            option.value = key
+            option.innerHTML = key
+            snippet_select.append(option)
+
+            // persist in local storage
+            localStorage.setItem('saved_snippets', JSON.stringify(saved_snippets));
+
+        }
+
 
         function change_gain() {
             gain_factor = gain_input.value / 100.0
@@ -325,9 +368,12 @@
 
     Or type notes (c3 to c7):
     <br>
-    <textarea rows="10" cols="30" id="notes_textarea">
+    <textarea rows="10" cols="30" id="notes_textarea"></textarea>
+    <!--
+    <br><button onclick="save()">Save as</button><input type="text" id="snippet_title_input" value="untitled"></input>
+    -->
 
-    </textarea>
+
 
     <br>
     <br>
