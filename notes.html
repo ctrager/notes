@@ -27,10 +27,6 @@
             font-size: 14px;
         }
 
-        #duration {
-            font-size: 20px;
-        }
-
         #my_title {
             font-size: 18px;
             letter-spacing: 3px;
@@ -294,7 +290,8 @@
             oscillator.frequency.value = frequency
 
             // connect and disconnect is on and off
-            gain.connect(audio_context.destination)
+            //gain.connect(audio_context.destination)
+            start_sound()
 
             if (note_index < (note_array.length - 1)) {
                 note_index++
@@ -313,6 +310,23 @@
 
             timeout = setTimeout(next_note, duration)
 
+        }
+
+        function start_sound() {
+            gain.disconnect()
+            var silence = silence_input.value
+            if (silence == 0) {
+                // start now
+                gain.connect(audio_context.destination)
+            }
+            else {
+                // start later
+                setTimeout(gain_connect, silence)
+            }
+        }
+
+        function gain_connect() {
+            gain.connect(audio_context.destination)
         }
 
         function stop_playing() {
@@ -379,6 +393,9 @@
     <br>
     Duration in milliseconds:&nbsp;
     <input id="duration_input" type="number" min="200" max="5000" value="600" step="100"></input>
+    &nbsp; &nbsp;
+    Silence in milliseconds:&nbsp;
+    <input id="silence_input" type="number" min="0" max="200" value="0" step="10"></input>
 
     <br>
     <br>
